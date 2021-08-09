@@ -1,0 +1,24 @@
+{
+  "name": "babylonjs-test",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "build": "webpack build",
+    "start": "webpack serve"
+  },
+  "author": "Ryo Kuroyanagi",
+  "license": "MIT",
+  "dependencies": {
+    "babylonjs": "^4.2.0",
+    "babylonjs-loaders": "^4.2.0",
+    "typescript": "^4.3.5"
+  },
+  "devDependencies": {
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.2",
+    "ts-loader": "^9.2.3",
+    "webpack": "^5.42.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
