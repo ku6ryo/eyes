@@ -11,32 +11,23 @@ import {
 import eyeUrl from "./glb/eye_low.glb"
 import "babylonjs-loaders"
 
-// Get the canvas DOM element
-var canvas = document.getElementById("canvas") as HTMLCanvasElement
-// Load the 3D engine
-var engine = new Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true})
+const canvas = document.getElementById("canvas") as HTMLCanvasElement
+const engine = new Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true})
 
-// CreateScene function that creates and return the scene
-var createScene = function(){
-    // Create a basic BJS Scene object
-    var scene = new Scene(engine)
-    // Create a FreeCamera, and set its position to {x: 0, y: 5, z: -10}
-    var camera = new FreeCamera("camera1", new Vector3(0, 0, -80), scene)
-    // Target the camera to scene origin
-    camera.setTarget(Vector3.Zero())
-    // Attach the camera to the canvas
-    camera.attachControl(canvas, false)
-    // Create a basic light, aiming 0, 1, 0 - meaning, to the sky
-    var light = new HemisphericLight("light1", new Vector3(0, 1, 0), scene)
-    loadGlb(scene)
-    return scene
+const createScene = function(){
+  const scene = new Scene(engine)
+  const camera = new FreeCamera("camera1", new Vector3(0, 0, -80), scene)
+  camera.setTarget(Vector3.Zero())
+  camera.attachControl(canvas, false)
+  new HemisphericLight("light1", new Vector3(0, 1, 0), scene)
+  loadGlb(scene)
+  return scene
 }
-// call the createScene function
+
 const scene = createScene()
 scene.clearColor = new Color4(0, 0, 0, 1)
-// run the render loop
 
-const num = 20
+const num = 10
 const eyes: InstancedMesh[] = []
 
 function createGridPose(length: number) {
@@ -48,7 +39,7 @@ function createGridPose(length: number) {
     const y = length / (num - 1) * k - length / 2
     const z = 30
     const position = new Vector3(x, y, z) 
-    const scale = new Vector3(1, 1, 1)
+    const scale = new Vector3(1.5, 1.5, 1.5)
     const rotation = new Vector3(0, 0, 0)
     poses.push({
       position,
@@ -70,7 +61,7 @@ function createSphereDotPoses(radius: number) {
     const y = radius * Math.cos(Math.PI / (num + 1) * (j + 1))
     const z = r * Math.sin(2 * Math.PI  / num * k)
     const position = new Vector3(x, y, z) 
-    const scale = new Vector3(1, 1, 1)
+    const scale = new Vector3(1.5, 1.5, 1.5)
     const rotation = new Vector3(0, 0, 0)
     poses.push({
       position,
@@ -96,7 +87,7 @@ function createSphereDotPosesPhaseShift(radius: number) {
     const y = radius * Math.cos(Math.PI / (num + 1) * (j + 1))
     const z = r * Math.sin(horizontalPhase)
     const position = new Vector3(x, y, z) 
-    const scale = new Vector3(1, 1, 1)
+    const scale = new Vector3(1.5, 1.5, 1.5)
     const rotation = new Vector3(0, 0, 0)
     poses.push({
       position,
@@ -148,6 +139,7 @@ engine.runRenderLoop(function() {
       const startPose = start[i]
       const endPose = end[i]
       eye.position = startPose.position.add(endPose.position.subtract(startPose.position).multiply(new Vector3(passed, passed, passed)))
+      eye.scaling = startPose.scale.add(endPose.scale.subtract(startPose.scale).multiply(new Vector3(passed, passed, passed)))
     })
     if (t > duration) {
       t = 0
@@ -185,7 +177,6 @@ async function loadGlb(scene: Scene) {
   }
 }
 
-// the canvas/window resize event handler
 window.addEventListener("resize", function(){
   engine.resize()
 })
